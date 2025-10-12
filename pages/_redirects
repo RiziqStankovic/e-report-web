@@ -1,0 +1,13 @@
+# Redirects for e-report-web
+
+# Redirect root to home
+/ /index.html 200
+
+# Redirect old paths to new paths
+/dashboard /dashboard 200
+/reports /reports 200
+/profile /profile 200
+/settings /settings 200
+
+# Handle 404s
+/* /404.html 404
