@@ -7,12 +7,12 @@ import { Button } from '@/components/ui/Button'
 import { CustomSelect } from '@/components/ui/CustomSelect'
 import { Textarea } from '@/components/ui/Textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { CreateReportData } from '@/types'
+import { CreateReportData, FileMetadata } from '@/types'
 import { reportsApi, masterDataApi } from '@/lib/api'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import { DocumentIcon } from '@heroicons/react/24/outline'
-import { ImageUpload } from '@/components/ui/ImageUpload'
+import { FileUpload } from '@/components/ui/FileUpload'
 import { AddCategoryModal } from '@/components/reports/AddCategoryModal'
 
 interface MasterData {
@@ -37,8 +37,8 @@ export function CreateReportForm() {
     ruangan: [],
     kategori: []
   })
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [imageMetadata, setImageMetadata] = useState<Record<string, unknown> | null>(null)
+  const [selectedFile, setSelectedFile] = useState<string | null>(null)
+  const [fileMetadata, setFileMetadata] = useState<FileMetadata | null>(null)
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false)
 
   const {
@@ -75,29 +75,22 @@ export function CreateReportForm() {
     }
   }
 
-  const handleImageSelect = async (base64: string) => {
-    try {
-      // Use image as is for now - optimization can be added later
-      setSelectedImage(base64)
-      
-      // Get metadata
-      const metadata = {
-        size: base64.length * 0.75, // Approximate size
-        type: base64.split(',')[0].split(':')[1].split(';')[0],
-        originalName: 'uploaded-image'
-      }
-      setImageMetadata(metadata)
-      
-      toast.success('Gambar berhasil diupload')
-    } catch (error) {
-      console.error('Error processing image:', error)
-      toast.error('Gagal memproses gambar')
+  const handleFileSelect = (filename: string, fileUrl: string) => {
+    setSelectedFile(filename)
+    
+    // Get metadata
+    const metadata = {
+      filename: filename,
+      url: fileUrl,
+      uploadedAt: new Date().toISOString()
     }
+    
+    setFileMetadata(metadata)
   }
 
-  const handleImageRemove = () => {
-    setSelectedImage(null)
-    setImageMetadata(null)
+  const handleFileRemove = () => {
+    setSelectedFile(null)
+    setFileMetadata(null)
   }
 
   const handleCategoryAdded = async () => {
@@ -119,14 +112,8 @@ export function CreateReportForm() {
       
       const reportData: CreateReportData = {
         ...data,
-        foto: selectedImage || undefined,
-        fotoMetadata: imageMetadata ? {
-          size: imageMetadata.size as number,
-          type: imageMetadata.type as string,
-          width: imageMetadata.width as number,
-          height: imageMetadata.height as number,
-          originalName: imageMetadata.originalName as string
-        } : undefined
+        foto: selectedFile || undefined,
+        fotoMetadata: fileMetadata || undefined
       }
       
       console.log('Creating report with data:', reportData)
@@ -305,10 +292,10 @@ export function CreateReportForm() {
               <label className="text-lg font-semibold text-gray-800 mb-4 block">
                 Foto Pendukung (Opsional)
               </label>
-              <ImageUpload
-                onImageSelect={handleImageSelect}
-                onImageRemove={handleImageRemove}
-                currentImage={selectedImage || undefined}
+              <FileUpload
+                onFileSelect={handleFileSelect}
+                onFileRemove={handleFileRemove}
+                currentFile={selectedFile || undefined}
                 maxSize={5}
                 disabled={loading}
               />

@@ -5,7 +5,7 @@ import { apiErrorInterceptor } from './api-error-handler'
 
 // Use proxy in development, direct URL in production
 const isDevelopment = process.env.NODE_ENV !== 'production'
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (isDevelopment ? '/api/proxy' : 'https://be-report.cloudfren.id/api')
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (isDevelopment ? '/api/proxy' : 'https://be-ereport.cloudfren.id/api')
 
 console.log('🔧 API Configuration:')
 console.log('  - isDevelopment:', isDevelopment)
@@ -224,6 +224,56 @@ export const exportApi = {
     })
     return response.data
   },
+}
+
+// Upload API
+export const uploadApi = {
+  uploadFile: async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    // Create axios instance without default headers for file upload
+    const uploadClient = axios.create({
+      baseURL: API_BASE_URL,
+      timeout: API_CONFIG.REQUEST.TIMEOUT,
+      withCredentials: API_CONFIG.CORS.CREDENTIALS
+    })
+    
+    // Add auth token
+    const token = localStorage.getItem('e-report-token')
+    if (token) {
+      uploadClient.defaults.headers.Authorization = `Bearer ${token}`
+    }
+    
+    const response = await uploadClient.post('/upload/file', formData, {
+      headers: {
+        // Don't set Content-Type - let browser set it with boundary
+      },
+    })
+    return response.data
+  },
+  
+  deleteFile: async (filename: string) => {
+    const response = await api.delete(`/upload/file/${filename}`)
+    return response.data
+  },
+  
+  getFileUrl: (filename: string) => {
+    // Get base URL and remove /api suffix if present
+    let baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081'
+    
+    if (baseUrl.endsWith('/api')) {
+      baseUrl = baseUrl.replace('/api', '')
+    }
+    
+    // If filename already includes /uploads/, use it as is
+    if (filename.startsWith('/uploads/')) {
+      return `${baseUrl}${filename}`
+    }
+    
+    // Otherwise, construct the path
+    return `${baseUrl}/uploads/${filename}`
+  }
 }
 
 export default api

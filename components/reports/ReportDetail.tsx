@@ -19,7 +19,7 @@ import {
   ClockIcon,
   XCircleIcon
 } from '@heroicons/react/24/outline'
-import { Base64Image } from '@/components/ui/ImageUpload'
+import { FileImage } from '@/components/ui/FileUpload'
 
 interface ReportDetailProps {
   reportId: string
@@ -190,8 +190,8 @@ export function ReportDetail({ reportId }: ReportDetailProps) {
             <div>
               <label className="text-sm font-medium text-gray-500">Foto Pendukung</label>
               <div className="mt-2">
-                <Base64Image
-                  base64={report.foto}
+                <FileImage
+                  filename={report.foto}
                   alt="Foto laporan"
                   className="w-full max-w-md h-64 object-cover rounded-lg border border-gray-200"
                   fallback={

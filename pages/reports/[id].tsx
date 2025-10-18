@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
-import { Base64Image } from '@/components/ui/ImageUpload'
+import { FileImage } from '@/components/ui/FileUpload'
 import { 
   ArrowLeftIcon,
   EyeIcon,
@@ -40,6 +40,25 @@ export default function ReportDetailPage() {
   const [showImagePreview, setShowImagePreview] = useState(false)
   const [previewImageUrl, setPreviewImageUrl] = useState('')
   const { error, executeWithErrorHandling } = useApiError()
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showImagePreview) {
+        setShowImagePreview(false)
+      }
+    }
+
+    if (showImagePreview) {
+      document.addEventListener('keydown', handleEscKey)
+      document.body.style.overflow = 'hidden' // Prevent background scrolling
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey)
+      document.body.style.overflow = 'unset'
+    }
+  }, [showImagePreview])
 
   // Fetch report details
   const fetchReport = useCallback(async () => {
@@ -121,7 +140,18 @@ export default function ReportDetailPage() {
 
   // Handle image preview
   const handleImagePreview = (url: string) => {
-    setPreviewImageUrl(url)
+    // Convert relative path to full URL if needed
+    let fullUrl = url
+    if (url.startsWith('/uploads/')) {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081'
+      const cleanBaseUrl = baseUrl.endsWith('/api') ? baseUrl.replace('/api', '') : baseUrl
+      fullUrl = `${cleanBaseUrl}${url}`
+    }
+    
+    console.log('[ImagePreview] Original URL:', url)
+    console.log('[ImagePreview] Full URL:', fullUrl)
+    
+    setPreviewImageUrl(fullUrl)
     setShowImagePreview(true)
   }
 
@@ -352,8 +382,8 @@ export default function ReportDetailPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="relative group">
                         <div onClick={() => handleImagePreview(report.foto!)}>
-                          <Base64Image
-                            base64={report.foto}
+                          <FileImage
+                            filename={report.foto}
                             alt="Foto laporan"
                             className="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                             fallback={
@@ -364,9 +394,10 @@ export default function ReportDetailPage() {
                             }
                           />
                         </div>
-                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
+                        {/* Temporarily disabled overlay for debugging */}
+                        {/* <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
                           <EyeIcon className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   ) : (
@@ -447,26 +478,37 @@ export default function ReportDetailPage() {
           </div>
         </div>
 
-        {/* Image Preview Modal - TODO: Implement ImagePreviewModal */}
+        {/* Image Preview Modal */}
         {showImagePreview && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-4 max-w-2xl max-h-2xl">
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            onClick={() => setShowImagePreview(false)}
+          >
+            <div 
+              className="bg-white rounded-lg p-4 max-w-4xl max-h-[90vh] w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Foto Laporan</h3>
+                <h3 className="text-lg font-semibold text-gray-700">Foto Laporan</h3>
                 <button
                   onClick={() => setShowImagePreview(false)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-500 hover:text-gray-700 text-xl font-bold"
                 >
                   ✕
                 </button>
               </div>
-              <Image
-                src={previewImageUrl}
-                alt="Preview"
-                width={800}
-                height={600}
-                className="max-w-full max-h-96 object-contain"
-              />
+              <div className="flex justify-center">
+                <Image
+                  src={previewImageUrl}
+                  alt="Preview Foto Laporan"
+                  width={800}
+                  height={600}
+                  className="max-w-full max-h-[70vh] object-contain rounded-lg"
+                  onError={() => {
+                    console.error('[ImagePreview] Failed to load image:', previewImageUrl)
+                  }}
+                />
+              </div>
             </div>
           </div>
         )}

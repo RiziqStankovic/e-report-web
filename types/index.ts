@@ -19,8 +19,8 @@ export interface Report {
   jenis: 'kebutuhan' | 'kendala'
   kategori: string
   deskripsi: string
-  foto?: string // base64 string
-  fotoMetadata?: ImageMetadata
+  foto?: string // filename or URL
+  fotoMetadata?: FileMetadata
   status: 'menunggu' | 'diproses' | 'selesai'
   catatan?: string
   createdAt: string
@@ -33,6 +33,14 @@ export interface ImageMetadata {
   width?: number
   height?: number
   originalName?: string
+}
+
+export interface FileMetadata {
+  filename: string
+  url: string
+  uploadedAt: string
+  size?: number
+  type?: string
 }
 
 export interface MasterData {
@@ -72,8 +80,8 @@ export interface CreateReportData {
   jenis: 'kebutuhan' | 'kendala'
   kategori: string
   deskripsi: string
-  foto?: string // base64 string
-  fotoMetadata?: ImageMetadata
+  foto?: string // filename or URL
+  fotoMetadata?: FileMetadata
 }
 
 export interface UpdateReportData {
