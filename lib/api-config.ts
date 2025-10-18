@@ -2,7 +2,7 @@
 
 export const API_CONFIG = {
   // Base API URL
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081',
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://be-report.cloudfren.id',
   
   // API Endpoints
   ENDPOINTS: {
@@ -64,7 +64,7 @@ export const API_CONFIG = {
 
   // CORS Configuration
   CORS: {
-    ALLOWED_ORIGINS: (process.env.NEXT_PUBLIC_CORS_ORIGINS || 'http://localhost:3000,http://localhost:3001').split(','),
+    ALLOWED_ORIGINS: (process.env.NEXT_PUBLIC_CORS_ORIGINS || 'http://e-report.cloudfren.id,http://localhost:3001').split(','),
     ALLOWED_METHODS: (process.env.NEXT_PUBLIC_CORS_METHODS || 'GET,POST,PUT,DELETE,PATCH,OPTIONS').split(','),
     ALLOWED_HEADERS: (process.env.NEXT_PUBLIC_CORS_HEADERS || 'Content-Type,Authorization,X-Requested-With,Accept,Origin').split(','),
     CREDENTIALS: process.env.NEXT_PUBLIC_CORS_CREDENTIALS === 'true'
@@ -83,14 +83,11 @@ export const getEndpointUrl = (endpoint: string): string => {
   return getApiUrl(endpoint)
 }
 
-// CORS headers for API requests
+// Standard headers for API requests (no CORS headers - browser handles these automatically)
 export const getCorsHeaders = (): Record<string, string> => {
   return {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Origin': typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
-    'Access-Control-Request-Method': 'POST',
-    'Access-Control-Request-Headers': 'Content-Type,Authorization'
+    'Accept': 'application/json'
   }
 }
 
@@ -108,64 +105,9 @@ export const getRequestHeaders = (token?: string): Record<string, string> => {
   return headers
 }
 
-// CORS preflight request handler
-export const handleCorsPreflight = (req: Request): Response => {
-  const origin = req.headers.get('Origin')
-  const method = req.headers.get('Access-Control-Request-Method')
-  const headers = req.headers.get('Access-Control-Request-Headers')
+// Note: CORS headers are handled by the backend server, not the frontend
 
-  // Check if origin is allowed
-  if (origin && !API_CONFIG.CORS.ALLOWED_ORIGINS.includes(origin)) {
-    return new Response('CORS: Origin not allowed', { status: 403 })
-  }
-
-  // Check if method is allowed
-  if (method && !API_CONFIG.CORS.ALLOWED_METHODS.includes(method)) {
-    return new Response('CORS: Method not allowed', { status: 405 })
-  }
-
-  // Check if headers are allowed
-  if (headers) {
-    const requestedHeaders = headers.split(',').map(h => h.trim())
-    const allowedHeaders = API_CONFIG.CORS.ALLOWED_HEADERS
-    const hasInvalidHeader = requestedHeaders.some(header => !allowedHeaders.includes(header))
-    
-    if (hasInvalidHeader) {
-      return new Response('CORS: Headers not allowed', { status: 400 })
-    }
-  }
-
-  // Return CORS headers
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': origin || '*',
-    'Access-Control-Allow-Methods': API_CONFIG.CORS.ALLOWED_METHODS.join(','),
-    'Access-Control-Allow-Headers': API_CONFIG.CORS.ALLOWED_HEADERS.join(','),
-    'Access-Control-Allow-Credentials': API_CONFIG.CORS.CREDENTIALS.toString(),
-    'Access-Control-Max-Age': '86400' // 24 hours
-  }
-
-  return new Response(null, {
-    status: 200,
-    headers: corsHeaders
-  })
-}
-
-// CORS response headers for API responses
-export const getCorsResponseHeaders = (origin?: string): Record<string, string> => {
-  const allowedOrigin = origin && API_CONFIG.CORS.ALLOWED_ORIGINS.includes(origin) 
-    ? origin 
-    : API_CONFIG.CORS.ALLOWED_ORIGINS[0]
-
-  return {
-    'Access-Control-Allow-Origin': allowedOrigin,
-    'Access-Control-Allow-Methods': API_CONFIG.CORS.ALLOWED_METHODS.join(','),
-    'Access-Control-Allow-Headers': API_CONFIG.CORS.ALLOWED_HEADERS.join(','),
-    'Access-Control-Allow-Credentials': API_CONFIG.CORS.CREDENTIALS.toString(),
-    'Access-Control-Expose-Headers': 'Content-Length,Content-Type,Date,Server,Transfer-Encoding'
-  }
-}
-
-// API request wrapper with CORS handling
+// API request wrapper
 export const apiRequest = async (
   endpoint: string,
   options: RequestInit = {},
@@ -184,13 +126,6 @@ export const apiRequest = async (
 
   try {
     const response = await fetch(url, requestOptions)
-    
-    // Add CORS headers to response
-    const corsHeaders = getCorsResponseHeaders()
-    Object.entries(corsHeaders).forEach(([key, value]) => {
-      response.headers.set(key, value)
-    })
-
     return response
   } catch (error) {
     console.error('API request failed:', error)

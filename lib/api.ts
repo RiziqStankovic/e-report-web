@@ -3,7 +3,14 @@ import { User, MasterData, LoginCredentials, CreateReportData, UpdateReportData 
 import { API_CONFIG, getCorsHeaders } from './api-config'
 import { apiErrorInterceptor } from './api-error-handler'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081'
+// Use proxy in development, direct URL in production
+const isDevelopment = process.env.NODE_ENV !== 'production'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (isDevelopment ? '/api/proxy' : 'https://be-report.cloudfren.id/api')
+
+console.log('🔧 API Configuration:')
+console.log('  - isDevelopment:', isDevelopment)
+console.log('  - NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL)
+console.log('  - Final API_BASE_URL:', API_BASE_URL)
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -40,7 +47,7 @@ api.interceptors.response.use(
   }
 )
 
-// Add auth token and CORS headers to requests
+// Add auth token to requests
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('e-report-token')
   
@@ -48,30 +55,19 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`
   }
 
-  // Add CORS headers
-  const corsHeaders = getCorsHeaders()
-  Object.entries(corsHeaders).forEach(([key, value]) => {
+  // Add standard headers (no CORS headers - browser handles these automatically)
+  const standardHeaders = getCorsHeaders()
+  Object.entries(standardHeaders).forEach(([key, value]) => {
     config.headers[key] = value
   })
 
   return config
 })
 
-// Handle CORS and errors in responses
+// Handle errors in responses
 api.interceptors.response.use(
   (response) => {
-    // Add CORS headers to response
-    const corsHeaders = {
-      'Access-Control-Allow-Origin': typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
-      'Access-Control-Allow-Methods': API_CONFIG.CORS.ALLOWED_METHODS.join(','),
-      'Access-Control-Allow-Headers': API_CONFIG.CORS.ALLOWED_HEADERS.join(','),
-      'Access-Control-Allow-Credentials': API_CONFIG.CORS.CREDENTIALS.toString()
-    }
-
-    Object.entries(corsHeaders).forEach(([key, value]) => {
-      response.headers[key] = value
-    })
-
+    // Return response as-is (CORS headers are handled by the server)
     return response
   },
   (error) => {

@@ -156,8 +156,8 @@ docker-compose up -d
 
 5. **Access application**
 
-- Frontend: http://localhost:3000
-- Backend: http://localhost:8081
+- Frontend: http://e-report.cloudfren.id
+- Backend: http://be-report.cloudfren.id
 - Database: localhost:5432
 
 ### Default Credentials
@@ -398,8 +398,8 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ```bash
 # Frontend
-NEXT_PUBLIC_API_URL=http://localhost:8081
-NEXT_PUBLIC_CORS_ORIGINS=http://localhost:3000
+NEXT_PUBLIC_API_URL=http://be-report.cloudfren.id
+NEXT_PUBLIC_CORS_ORIGINS=http://e-report.cloudfren.id
 
 # Backend
 DB_HOST=localhost

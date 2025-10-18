@@ -2,7 +2,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const CORS_ORIGINS = [
-  'http://localhost:3000',
+  'http://e-report.cloudfren.id',
   'http://localhost:3001',
   'https://yourdomain.com'
 ]

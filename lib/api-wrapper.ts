@@ -175,7 +175,7 @@ export class ApiWrapper {
 
 // Create API wrapper instance
 const apiWrapper = new ApiWrapper(
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081',
+  process.env.NEXT_PUBLIC_API_URL || 'http://be-report.cloudfren.id',
   parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000'),
   parseInt(process.env.NEXT_PUBLIC_API_RETRIES || '3')
 )

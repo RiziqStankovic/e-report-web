@@ -3,7 +3,7 @@
 export const config = {
   // API Configuration
   api: {
-    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://be-report.cloudfren.id',
     timeout: 10000,
     retries: 3
   },
@@ -11,7 +11,7 @@ export const config = {
   // CORS Configuration
   cors: {
     allowedOrigins: [
-      'http://localhost:3000',
+      'http://e-report.cloudfren.id',
       'http://localhost:3001',
       'https://yourdomain.com'
     ],

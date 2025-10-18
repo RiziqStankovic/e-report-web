@@ -10,7 +10,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:8081
+      - NEXT_PUBLIC_API_URL=http://be-report.cloudfren.id
     volumes:
       - .:/app
       - /app/node_modules
@@ -33,7 +33,7 @@ services:
       - DB_PASSWORD=password
       - DB_NAME=e_report
       - JWT_SECRET=your-secret-key
-      - CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+      - CORS_ORIGINS=http://e-report.cloudfren.id,http://localhost:3001
     depends_on:
       - postgres
     networks:

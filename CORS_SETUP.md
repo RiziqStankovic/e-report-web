@@ -19,12 +19,12 @@ Dokumentasi ini menjelaskan konfigurasi CORS (Cross-Origin Resource Sharing) unt
 
 ```bash
 # API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:8081
+NEXT_PUBLIC_API_URL=http://be-report.cloudfren.id
 NEXT_PUBLIC_API_TIMEOUT=10000
 NEXT_PUBLIC_API_RETRIES=3
 
 # CORS Configuration
-NEXT_PUBLIC_CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+NEXT_PUBLIC_CORS_ORIGINS=http://e-report.cloudfren.id,http://localhost:3001
 NEXT_PUBLIC_CORS_METHODS=GET,POST,PUT,DELETE,PATCH,OPTIONS
 NEXT_PUBLIC_CORS_HEADERS=Content-Type,Authorization,X-Requested-With,Accept,Origin
 NEXT_PUBLIC_CORS_CREDENTIALS=true
@@ -49,7 +49,7 @@ NEXT_PUBLIC_CORS_CREDENTIALS=true
 
 ```bash
 # CORS Configuration
-CORS_ORIGINS=http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001
+CORS_ORIGINS=http://e-report.cloudfren.id,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001
 CORS_METHODS=GET,POST,PUT,DELETE,PATCH,OPTIONS
 CORS_HEADERS=Origin,Content-Type,Accept,Authorization,X-Requested-With
 CORS_CREDENTIALS=true
@@ -71,7 +71,7 @@ Menggunakan `github.com/gin-contrib/cors` untuk menangani CORS dengan konfiguras
 
 ### API Base URL
 
-- **Development**: `http://localhost:8081`
+- **Development**: `http://be-report.cloudfren.id`
 - **Production**: `https://yourdomain.com`
 
 ### Endpoints yang Dikonfigurasi
@@ -133,17 +133,17 @@ go run main.go
 ```bash
 # Test preflight request
 curl -X OPTIONS \
-  -H "Origin: http://localhost:3000" \
+  -H "Origin: http://e-report.cloudfren.id" \
   -H "Access-Control-Request-Method: POST" \
   -H "Access-Control-Request-Headers: Content-Type,Authorization" \
-  http://localhost:8081/api/auth/login
+  http://be-report.cloudfren.id/api/auth/login
 
 # Test actual request
 curl -X POST \
-  -H "Origin: http://localhost:3000" \
+  -H "Origin: http://e-report.cloudfren.id" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}' \
-  http://localhost:8081/api/auth/login
+  http://be-report.cloudfren.id/api/auth/login
 ```
 
 ## Troubleshooting
