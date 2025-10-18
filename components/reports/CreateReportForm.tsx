@@ -283,7 +283,7 @@ export function CreateReportForm() {
               value={watch('kategori')}
               onChange={(value) => setValue('kategori', value)}
               error={errors.kategori?.message}
-              showAddButton={user?.role === 'ketua_kelas' || user?.role === 'admin'}
+              showAddButton={false}
               onAddNew={() => setShowAddCategoryModal(true)}
               addButtonText="Tambah Kategori"
             />
