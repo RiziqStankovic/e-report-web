@@ -204,7 +204,8 @@ export function FileUpload({
     // If it's a relative path starting with /uploads/, add host
     if (file.startsWith('/uploads/')) {
       // Get base URL and remove /api suffix if present
-      let baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081'
+      const isDevelopment = process.env.NODE_ENV !== 'production'
+      let baseUrl = process.env.NEXT_PUBLIC_API_URL || (isDevelopment ? 'https://be-ereport.cloudfren.id' : 'https://be-ereport.cloudfren.id')
       if (baseUrl.endsWith('/api')) {
         baseUrl = baseUrl.replace('/api', '')
       }
@@ -347,7 +348,8 @@ export function FileImage({ filename, alt = 'Image', className = '', fallback }:
     // If it's a relative path starting with /uploads/, add host
     if (file.startsWith('/uploads/')) {
       // Get base URL and remove /api suffix if present
-      let baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081'
+      const isDevelopment = process.env.NODE_ENV !== 'production'
+      let baseUrl = process.env.NEXT_PUBLIC_API_URL || (isDevelopment ? 'https://be-ereport.cloudfren.id' : 'https://be-ereport.cloudfren.id')
       
       if (baseUrl.endsWith('/api')) {
         baseUrl = baseUrl.replace('/api', '')

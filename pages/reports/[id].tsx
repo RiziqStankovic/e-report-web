@@ -143,7 +143,8 @@ export default function ReportDetailPage() {
     // Convert relative path to full URL if needed
     let fullUrl = url
     if (url.startsWith('/uploads/')) {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081'
+      const isDevelopment = process.env.NODE_ENV !== 'production'
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || (isDevelopment ? 'https://be-ereport.cloudfren.id' : 'https://be-ereport.cloudfren.id')
       const cleanBaseUrl = baseUrl.endsWith('/api') ? baseUrl.replace('/api', '') : baseUrl
       fullUrl = `${cleanBaseUrl}${url}`
     }

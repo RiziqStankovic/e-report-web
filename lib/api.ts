@@ -260,7 +260,7 @@ export const uploadApi = {
   
   getFileUrl: (filename: string) => {
     // Get base URL and remove /api suffix if present
-    let baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081'
+    let baseUrl = process.env.NEXT_PUBLIC_API_URL || (isDevelopment ? 'https://be-ereport.cloudfren.id' : 'https://be-ereport.cloudfren.id')
     
     if (baseUrl.endsWith('/api')) {
       baseUrl = baseUrl.replace('/api', '')
