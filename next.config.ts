@@ -26,8 +26,25 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
-    domains: ['localhost', 'your-s3-bucket.s3.amazonaws.com'],
-    formats: ['image/webp', 'image/avif']
+    domains: ['localhost', 'be-ereport.cloudfren.id', 'e-report.cloudfren.id'],
+    formats: ['image/webp', 'image/avif'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'be-ereport.cloudfren.id',
+        port: '',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8081',
+        pathname: '/uploads/**',
+      }
+    ],
+    unoptimized: true,
+    dangerouslyAllowSVG: false,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
   // Experimental features

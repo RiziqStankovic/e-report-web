@@ -241,6 +241,7 @@ export default function MobileCreateReportPage() {
                       alt="Preview"
                       width={400}
                       height={192}
+                      unoptimized={true}
                       className="w-full h-48 object-cover rounded-lg border"
                     />
                   </div>

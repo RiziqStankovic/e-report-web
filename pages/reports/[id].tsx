@@ -504,6 +504,7 @@ export default function ReportDetailPage() {
                   alt="Preview Foto Laporan"
                   width={800}
                   height={600}
+                  unoptimized={true}
                   className="max-w-full max-h-[70vh] object-contain rounded-lg"
                   onError={() => {
                     console.error('[ImagePreview] Failed to load image:', previewImageUrl)

@@ -401,6 +401,7 @@ export function FileImage({ filename, alt = 'Image', className = '', fallback }:
         width={400}
         height={300}
         priority={true}
+        unoptimized={true}
         className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
         onLoad={handleLoad}
         onError={handleError}

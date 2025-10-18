@@ -122,6 +122,7 @@ export function ImageUpload({
                 alt="Preview"
                 width={200}
                 height={128}
+                unoptimized={true}
                 className="max-h-32 max-w-full rounded-lg object-cover"
               />
               <button
@@ -214,6 +215,7 @@ export function Base64Image({ base64, alt = 'Image', className = '', fallback }:
         alt={alt}
         width={400}
         height={300}
+        unoptimized={true}
         className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
         onLoad={handleLoad}
         onError={handleError}

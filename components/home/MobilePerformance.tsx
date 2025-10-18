@@ -91,6 +91,7 @@ export function MobileImage({ src, alt, className = '', priority = false }: Mobi
       alt={alt}
       width={400}
       height={300}
+      unoptimized={true}
       className={`${className} ${!isLoaded ? 'lazy' : ''}`}
       priority={priority}
       onLoad={() => setIsLoaded(true)}

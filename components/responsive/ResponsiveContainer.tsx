@@ -168,6 +168,7 @@ export function ResponsiveImage({
       alt={alt}
       width={400}
       height={300}
+      unoptimized={true}
       className={className}
       style={style}
     />
