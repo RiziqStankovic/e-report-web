@@ -31,7 +31,7 @@ export default function MyReportsPage() {
       setLoading(true)
       try {
         const data = await reportsApi.getMyReports()
-        setReports(data)
+        setReports(data || [])
       } catch (error) {
         console.error('Error fetching reports:', error)
         // No fallback data - use empty array
@@ -50,7 +50,7 @@ export default function MyReportsPage() {
     }
   }, [isAuthenticated, user, router, fetchMyReports])
 
-  const filteredReports = reports.filter(report => {
+  const filteredReports = (reports || []).filter(report => {
     if (filters.status && report.status !== filters.status) return false
     if (filters.jenis && report.jenis !== filters.jenis) return false
     if (filters.kategori && report.kategori !== filters.kategori) return false
@@ -58,11 +58,12 @@ export default function MyReportsPage() {
   })
 
   const getStatusCounts = () => {
+    const reportsArray = reports || []
     const counts = {
-      total: reports.length,
-      menunggu: reports.filter(r => r.status === 'menunggu').length,
-      diproses: reports.filter(r => r.status === 'diproses').length,
-      selesai: reports.filter(r => r.status === 'selesai').length
+      total: reportsArray.length,
+      menunggu: reportsArray.filter(r => r.status === 'menunggu').length,
+      diproses: reportsArray.filter(r => r.status === 'diproses').length,
+      selesai: reportsArray.filter(r => r.status === 'selesai').length
     }
     return counts
   }
