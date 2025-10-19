@@ -67,7 +67,6 @@ const WHATSAPP_TEMPLATES: WhatsAppTemplate[] = [
 ]
 
 export function WhatsAppNotification({ 
-  reportId, 
   reportData, 
   onSend,
   className 

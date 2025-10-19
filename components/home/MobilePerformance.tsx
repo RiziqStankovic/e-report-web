@@ -146,9 +146,8 @@ export function MobilePerformanceMonitor() {
     // Monitor performance metrics
     const monitorPerformance = () => {
       if ('performance' in window) {
-        const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
-        
         // Performance metrics are available but not logged in production
+        // const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
       }
     }
 
@@ -161,8 +160,8 @@ export function MobilePerformanceMonitor() {
 
     // Monitor memory usage (if available)
     if ('memory' in performance) {
-      const memory = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number } }).memory
       // Memory usage is available but not logged in production
+      // const memory = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number } }).memory
     }
 
     return () => {
