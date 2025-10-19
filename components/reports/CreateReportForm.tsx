@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/Button'
 import { CustomSelect } from '@/components/ui/CustomSelect'
 import { Textarea } from '@/components/ui/Textarea'
@@ -23,7 +22,6 @@ interface MasterData {
 }
 
 export function CreateReportForm() {
-  const { user } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [masterData, setMasterData] = useState<{
@@ -46,8 +44,12 @@ export function CreateReportForm() {
     handleSubmit,
     formState: { errors },
     watch,
-    setValue
-  } = useForm<CreateReportData>()
+    setValue,
+    setError,
+    clearErrors
+  } = useForm<CreateReportData>({
+    mode: 'onChange'
+  })
 
   const jenis = watch('jenis')
 
@@ -107,6 +109,45 @@ export function CreateReportForm() {
   }
 
   const onSubmit = async (data: CreateReportData) => {
+    // Validasi manual untuk memastikan semua field required sudah diisi
+    const validationErrors: string[] = []
+    
+    if (!data.kelas || data.kelas.trim() === '') {
+      validationErrors.push('Kelas wajib dipilih')
+      setError('kelas', { type: 'required', message: 'Kelas wajib dipilih' })
+    }
+    
+    if (!data.shift || data.shift.trim() === '') {
+      validationErrors.push('Shift wajib dipilih')
+      setError('shift', { type: 'required', message: 'Shift wajib dipilih' })
+    }
+    
+    if (!data.ruangan || data.ruangan.trim() === '') {
+      validationErrors.push('Ruangan wajib dipilih')
+      setError('ruangan', { type: 'required', message: 'Ruangan wajib dipilih' })
+    }
+    
+    if (!data.kategori || data.kategori.trim() === '') {
+      validationErrors.push('Kategori wajib dipilih')
+      setError('kategori', { type: 'required', message: 'Kategori wajib dipilih' })
+    }
+    
+    if (!data.jenis || data.jenis.trim() === '') {
+      validationErrors.push('Jenis laporan wajib dipilih')
+      setError('jenis', { type: 'required', message: 'Jenis laporan wajib dipilih' })
+    }
+    
+    if (!data.deskripsi || data.deskripsi.trim() === '') {
+      validationErrors.push('Deskripsi wajib diisi')
+      setError('deskripsi', { type: 'required', message: 'Deskripsi wajib diisi' })
+    }
+    
+    // Jika ada error validasi, tampilkan pesan dan stop submit
+    if (validationErrors.length > 0) {
+      toast.error(`Mohon lengkapi semua field yang wajib diisi:\n${validationErrors.join('\n')}`)
+      return
+    }
+    
     try {
       setLoading(true)
       
@@ -116,14 +157,12 @@ export function CreateReportForm() {
         fotoMetadata: fileMetadata || undefined
       }
       
-      console.log('Creating report with data:', reportData)
       await reportsApi.create(reportData)
-      console.log('Report created successfully')
       toast.success('Laporan berhasil dibuat!')
       router.push('/reports/my')
     } catch (error: unknown) {
       console.error('Error creating report:', error)
-      toast.error( 'Gagal membuat laporan')
+      toast.error('Gagal membuat laporan')
     } finally {
       setLoading(false)
     }
@@ -155,7 +194,14 @@ export function CreateReportForm() {
                   label: item.name
                 }))}
                 value={watch('kelas')}
-                onChange={(value) => setValue('kelas', value)}
+                onChange={(value) => {
+                  setValue('kelas', value)
+                  if (value) {
+                    clearErrors('kelas')
+                  } else {
+                    setError('kelas', { type: 'required', message: 'Kelas wajib dipilih' })
+                  }
+                }}
                 error={errors.kelas?.message}
               />
               
@@ -167,7 +213,14 @@ export function CreateReportForm() {
                   label: item.name
                 }))}
                 value={watch('shift')}
-                onChange={(value) => setValue('shift', value)}
+                onChange={(value) => {
+                  setValue('shift', value)
+                  if (value) {
+                    clearErrors('shift')
+                  } else {
+                    setError('shift', { type: 'required', message: 'Shift wajib dipilih' })
+                  }
+                }}
                 error={errors.shift?.message}
               />
               
@@ -179,7 +232,14 @@ export function CreateReportForm() {
                   label: item.name
                 }))}
                 value={watch('ruangan')}
-                onChange={(value) => setValue('ruangan', value)}
+                onChange={(value) => {
+                  setValue('ruangan', value)
+                  if (value) {
+                    clearErrors('ruangan')
+                  } else {
+                    setError('ruangan', { type: 'required', message: 'Ruangan wajib dipilih' })
+                  }
+                }}
                 error={errors.ruangan?.message}
               />
             </div>
@@ -268,7 +328,14 @@ export function CreateReportForm() {
                 label: item.name
               }))}
               value={watch('kategori')}
-              onChange={(value) => setValue('kategori', value)}
+              onChange={(value) => {
+                setValue('kategori', value)
+                if (value) {
+                  clearErrors('kategori')
+                } else {
+                  setError('kategori', { type: 'required', message: 'Kategori wajib dipilih' })
+                }
+              }}
               error={errors.kategori?.message}
               showAddButton={false}
               onAddNew={() => setShowAddCategoryModal(true)}

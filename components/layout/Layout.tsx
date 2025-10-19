@@ -67,7 +67,7 @@ export function Layout({ children }: LayoutProps) {
         name: 'Data Master',
         href: '/master-data',
         icon: Cog6ToothIcon,
-        roles: ['admin', 'staff', 'kepala_bagian']
+        roles: ['admin']
       }
     ]
 

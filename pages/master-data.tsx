@@ -25,7 +25,7 @@ export default function MasterDataPage() {
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/login')
-    } else if (user?.role === 'ketua_kelas') {
+    } else if (user?.role !== 'admin') {
       router.push('/dashboard')
     }
   }, [isAuthenticated, user, router])

@@ -364,16 +364,13 @@ export function FileImage({ filename, alt = 'Image', className = '', fallback }:
 
   const fileUrl = getFileUrl(filename)
   
-  console.log('[FileImage] Current state - isLoading:', isLoading, 'hasError:', hasError)
 
   const handleLoad = () => {
-    console.log('[FileImage] Image loaded successfully, setting isLoading to false')
     setIsLoading(false)
     setHasError(false)
   }
 
   const handleError = () => {
-    console.log('[FileImage] Image failed to load, setting isLoading to false and hasError to true')
     setIsLoading(false)
     setHasError(true)
     console.error('[FileImage] Failed to load file image:', filename)

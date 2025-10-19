@@ -158,11 +158,7 @@ export function WhatsAppNotification({
       setSending(true)
       try {
         // Mock WhatsApp API call
-        console.log('Sending WhatsApp notification:', {
-          message: customMessage,
-          recipients: selectedRecipients.map(r => r.phone),
-          reportId
-        })
+        // In real implementation, call WhatsApp API
 
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 2000))

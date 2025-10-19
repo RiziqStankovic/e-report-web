@@ -55,7 +55,6 @@ export function NotificationCenter({
       const websocket = new WebSocket(wsUrl)
       
       websocket.onopen = () => {
-        console.log('WebSocket connected')
       }
       
       websocket.onmessage = (event) => {
@@ -74,7 +73,6 @@ export function NotificationCenter({
       }
       
       websocket.onclose = () => {
-        console.log('WebSocket disconnected, attempting to reconnect...')
         setTimeout(connectWebSocket, 5000)
       }
       

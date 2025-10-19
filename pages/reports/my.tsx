@@ -31,7 +31,6 @@ export default function MyReportsPage() {
       setLoading(true)
       try {
         const data = await reportsApi.getMyReports()
-        console.log('Fetched reports data:', data)
         setReports(data)
       } catch (error) {
         console.error('Error fetching reports:', error)

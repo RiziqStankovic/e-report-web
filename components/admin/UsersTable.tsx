@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Badge } from '@/components/ui/Badge'
-import { User } from '@/types'
+import { User, CreateUserData, UpdateUserData } from '@/types'
 import { usersApi } from '@/lib/api'
 import toast from 'react-hot-toast'
 import { 
@@ -23,13 +23,14 @@ export function UsersTable() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [editingData, setEditingData] = useState<Partial<User>>({})
-  const [newUser, setNewUser] = useState<Partial<User>>({
+  const [editingData, setEditingData] = useState<Partial<UpdateUserData>>({})
+  const [newUser, setNewUser] = useState<Partial<CreateUserData>>({
     username: '',
     name: '',
     email: '',
     phone: '',
-    role: 'ketua_kelas'
+    role: 'ketua_kelas',
+    password: ''
   })
   const [showAddForm, setShowAddForm] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -51,8 +52,13 @@ export function UsersTable() {
   }
 
   const handleAdd = async () => {
-    if (!newUser.username || !newUser.name) {
-      toast.error('Username dan nama wajib diisi')
+    if (!newUser.username || !newUser.name || !newUser.password) {
+      toast.error('Username, nama, dan password wajib diisi')
+      return
+    }
+
+    if (newUser.password && newUser.password.length < 6) {
+      toast.error('Password minimal 6 karakter')
       return
     }
 
@@ -62,7 +68,8 @@ export function UsersTable() {
         name: newUser.name!,
         email: newUser.email,
         phone: newUser.phone,
-        role: newUser.role as 'admin' | 'ketua_kelas' | 'staff' | 'kepala_bagian'
+        role: newUser.role as 'admin' | 'ketua_kelas' | 'staff' | 'kepala_bagian',
+        password: newUser.password!
       })
       toast.success('Pengguna berhasil ditambahkan')
       setNewUser({
@@ -70,7 +77,8 @@ export function UsersTable() {
         name: '',
         email: '',
         phone: '',
-        role: 'ketua_kelas'
+        role: 'ketua_kelas',
+        password: ''
       })
       setShowAddForm(false)
       fetchUsers()
@@ -95,8 +103,19 @@ export function UsersTable() {
       return
     }
 
+    if (editingData.password && editingData.password.length < 6) {
+      toast.error('Password minimal 6 karakter')
+      return
+    }
+
     try {
-      await usersApi.update(editingId!, editingData)
+      // Jika password kosong, hapus dari data yang dikirim
+      const updateData = { ...editingData }
+      if (!updateData.password || updateData.password.trim() === '') {
+        delete updateData.password
+      }
+
+      await usersApi.update(editingId!, updateData)
       toast.success('Data pengguna berhasil diperbarui')
       setEditingId(null)
       setEditingData({})
@@ -211,11 +230,21 @@ export function UsersTable() {
                 placeholder="Username"
                 value={newUser.username}
                 onChange={(e) => setNewUser(prev => ({ ...prev, username: e.target.value }))}
+                required
               />
               <Input
                 placeholder="Nama Lengkap"
                 value={newUser.name}
                 onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
+                required
+              />
+              <Input
+                placeholder="Password (min 6 karakter)"
+                type="password"
+                value={newUser.password}
+                onChange={(e) => setNewUser(prev => ({ ...prev, password: e.target.value }))}
+                required
+                minLength={6}
               />
               <Input
                 placeholder="Email (opsional)"
@@ -289,6 +318,14 @@ export function UsersTable() {
                         placeholder="Nama Lengkap"
                         value={editingData.name}
                         onChange={(e) => setEditingData(prev => ({ ...prev, name: e.target.value }))}
+                        required
+                      />
+                      <Input
+                        placeholder="Password Baru (kosongkan jika tidak diubah)"
+                        type="password"
+                        value={editingData.password || ''}
+                        onChange={(e) => setEditingData(prev => ({ ...prev, password: e.target.value }))}
+                        minLength={6}
                       />
                       <Input
                         placeholder="Email"

@@ -346,7 +346,7 @@ export default function DashboardPage() {
             </div>
           ) : stats?.recentReports && stats.recentReports.length > 0 ? (
             <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-              {stats.recentReports.map((report, index) => {
+              {stats.recentReports.map((report) => {
                 const getStatusColor = (status: string) => {
                   switch (status) {
                     case 'menunggu':

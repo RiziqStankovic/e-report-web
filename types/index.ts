@@ -9,6 +9,23 @@ export interface User {
   updatedAt: string
 }
 
+export interface CreateUserData {
+  username: string
+  name: string
+  role: 'admin' | 'ketua_kelas' | 'staff' | 'kepala_bagian'
+  email?: string
+  phone?: string
+  password: string
+}
+
+export interface UpdateUserData {
+  name?: string
+  email?: string
+  phone?: string
+  role?: 'admin' | 'ketua_kelas' | 'staff' | 'kepala_bagian'
+  password?: string
+}
+
 export interface Report {
   id: string
   userId: string

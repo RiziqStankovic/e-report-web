@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { User, MasterData, LoginCredentials, CreateReportData, UpdateReportData } from '@/types'
+import { MasterData, LoginCredentials, CreateReportData, UpdateReportData, CreateUserData, UpdateUserData } from '@/types'
 import { API_CONFIG, getCorsHeaders } from './api-config'
 import { apiErrorInterceptor } from './api-error-handler'
 
@@ -178,11 +178,11 @@ export const usersApi = {
     const response = await api.get(`/users/${id}`)
     return response.data
   },
-  create: async (data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) => {
+  create: async (data: CreateUserData) => {
     const response = await api.post('/users', data)
     return response.data
   },
-  update: async (id: string, data: Partial<User>) => {
+  update: async (id: string, data: UpdateUserData) => {
     const response = await api.put(`/users/${id}`, data)
     return response.data
   },

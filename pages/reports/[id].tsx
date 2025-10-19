@@ -10,7 +10,6 @@ import { Badge } from '@/components/ui/Badge'
 import { FileImage } from '@/components/ui/FileUpload'
 import { 
   ArrowLeftIcon,
-  EyeIcon,
   PencilIcon,
   TrashIcon,
   PhotoIcon,
@@ -68,13 +67,6 @@ export default function ReportDetailPage() {
       setLoading(true)
       try {
         const data = await reportsApi.getById(id)
-        console.log('Report data received:', data)
-        console.log('Photo data:', data.foto)
-        console.log('Photo data type:', typeof data.foto)
-        console.log('Photo data length:', data.foto?.length)
-        console.log('Photo data starts with data:', data.foto?.startsWith('data:'))
-        console.log('Photo data first 100 chars:', data.foto?.substring(0, 100))
-        console.log('Photo data last 50 chars:', data.foto?.substring(data.foto.length - 50))
         setReport(data)
       } catch (error: unknown) {
         console.error('Error fetching report:', error)
@@ -149,8 +141,6 @@ export default function ReportDetailPage() {
       fullUrl = `${cleanBaseUrl}${url}`
     }
     
-    console.log('[ImagePreview] Original URL:', url)
-    console.log('[ImagePreview] Full URL:', fullUrl)
     
     setPreviewImageUrl(fullUrl)
     setShowImagePreview(true)
